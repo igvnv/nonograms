@@ -1,0 +1,67 @@
+@import "../config";
+
+header {
+  background: $color-vue-gray;
+  color: white;
+  margin-bottom: 20px;
+  padding: 20px;
+  position: relative;
+  text-align: right;
+
+  a {
+    color: white;
+
+    &.router-link-exact-active {
+      color: $color-vue-green;
+    }
+  }
+}
+
+#logo {
+  border: 1px solid white;
+  border-radius: 2px;
+  box-shadow: 0 2px 2px 2px rgba(0, 0, 0, .5);
+  height: 28px;
+  left: 20px;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+
+  span {
+    background: $color-vue-green;
+    border: 1px solid white;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 10px;
+    margin: 1px;
+    transition: transform .2s;
+    width: 10px;
+
+    &:hover {
+      transform: scale(1.5);
+    }
+
+    &.cancelled {
+      background: white;
+      position: relative;
+
+      &:before, &:after {
+        background: $color-vue-gray;
+        content: '';
+        height: 1px;
+        left: -1px;
+        position: absolute;
+        top: 5px;
+        transform: rotate(45deg);
+        width: 12px;
+      }
+
+      &:after {
+        transform: rotate(-45deg);
+      }
+    }
+  }
+}

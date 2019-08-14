@@ -1,0 +1,86 @@
+@import "../config";
+
+#field {
+  border: 2px solid $color-vue-gray;
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  .active {
+    background: #ffffcc;
+  }
+  
+  .hNumbers {
+    display: flex;
+
+    div {
+      display: flex;
+      flex-basis: 100%;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-align: center;
+
+      &.delimiter {
+        border-right: 1px solid $color-vue-gray;
+      }
+    }
+
+    span {
+      padding: 2px 0;
+    }
+  }
+
+  .wNumbers {
+    div {
+      display: flex;
+      flex-basis: 100%;
+      justify-content: flex-end;
+      text-align: center;
+
+      &.delimiter {
+        border-bottom: 1px solid $color-vue-gray;
+      }
+    }
+
+    span {
+      padding: 0 5px;
+    }
+  }
+
+  .game {
+    border-left: 1px solid $color-vue-gray;
+    border-top: 1px solid $color-vue-gray;
+
+    div {
+      display: flex;
+
+      &.delimiter {
+        border-bottom: 1px solid $color-vue-gray;
+      }
+    }
+
+    .cell {
+      border-left: 1px solid $color-vue-gray;
+      border-top: 1px solid $color-vue-gray;
+      cursor: pointer;
+      display: inline-block;
+      flex-basis: 100%;
+      height: 1.4em;
+
+      &.delimiter {
+        border-right: 1px solid $color-vue-gray;
+      }
+    }
+
+    .filled {
+      background: $color-vue-green;
+    }
+
+    .cancelled {
+      background: $color-vue-gray;
+    }
+
+    .noticed {
+      background: #cc0000;
+    }
+  }
+}
