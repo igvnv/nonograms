@@ -1,0 +1,55 @@
+@import "../config";
+
+#gamesList {
+  border: 1px solid $color-vue-gray;
+  border-radius: 5px;
+  overflow: hidden;
+
+  li {
+    border-bottom: 1px solid $color-vue-gray;
+    overflow: hidden;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: lighten($color-vue-gray, 60%);
+
+      .number {
+        background: darken($color-vue-green, 10%);
+      }
+    }
+  }
+
+  a {
+    display: block;
+    text-decoration: none;
+  }
+
+  .number {
+    background: $color-vue-green;
+    color: #fff;
+    display: inline-block;
+    float: left;
+    height: 50px;
+    line-height: 52px;
+    margin-right: 10px;
+    text-align: center;
+    width: 50px;
+  }
+
+  .size {
+    background: lighten($color-vue-gray, 20%);
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    margin: 7px 0 3px;
+    padding: 2px 5px;
+  }
+
+  .name {
+    display: block;
+  }
+}

@@ -1,16 +1,19 @@
 <template>
   <header>
-    <div id="logo">
-      <span @click="toggleLogoCell"></span>
-      <span @click="toggleLogoCell"></span>
-      <span @click="toggleLogoCell"></span>
-      <span @click="toggleLogoCell" class="cancelled"></span>
-    </div>
+    <h1>
+      <span id="logo">
+        <span @click="toggleLogoCell"></span>
+        <span @click="toggleLogoCell"></span>
+        <span @click="toggleLogoCell"></span>
+        <span @click="toggleLogoCell" class="cancelled"></span>
+      </span>
+      Nonograms
+    </h1>
 
-    <div id="nav">
+    <nav>
       <router-link :to="{name: 'home'}">Home</router-link> |
       <router-link :to="{name: 'about'}">About</router-link>
-    </div>
+    </nav>
   </header>
 </template>
 <script>
