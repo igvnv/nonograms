@@ -1,0 +1,92 @@
+@import "../config";
+
+#game {
+  position: relative;
+
+  .actions {
+    margin-top: 15px;
+  }
+
+  .done {
+    animation: showDonePopup .5s;
+    background: #fff;
+    border-radius: 10px;
+    font-size: 1.4em;
+    left: 50%;
+    line-height: 1.25em;
+    padding: 20px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+
+    .buttons {
+      white-space: nowrap;
+    }
+
+    p {
+      margin-bottom: 8px;
+    }
+
+    button {
+      font-size: .6em;
+      margin: 0 3px 5px;
+    }
+  }
+
+  .doneBackground {
+    background: rgba(#000, .5);
+    height: calc(100% + 50px);
+    left: -25px;
+    position: absolute;
+    top: -25px;
+    width: calc(100% + 50px);
+    z-index: 9;
+  }
+
+  button {
+    background: $color-vue-green;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba($color-vue-gray, .5);
+    color: #fff;
+    font-size: 1.1em;
+    height: 35px;
+    line-height: 36px;
+    overflow: hidden;
+    padding: 0 15px;
+    transition: background .2s, box-shadow .2s, transform .2s;
+
+    &:hover {
+      box-shadow: 0 2px 5px rgba($color-vue-gray, .8);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:active {
+      background: $color-vue-gray;
+      color: rgba(#fff, .8);
+      transform: translateY(1px);
+    }
+
+    &:disabled {
+      background: lighten($color-vue-gray, 50%);
+      box-shadow: none;
+      color: rgba(#fff, .5);
+    }
+  }
+}
+
+@keyframes showDonePopup {
+  from {
+    margin-top: -20px;
+    opacity: 0;
+  }
+  to {
+    margin-top: 0;
+    opacity: 1;
+  }
+}

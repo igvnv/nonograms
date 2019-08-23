@@ -38,8 +38,13 @@
     text-align: center;
     width: 50px;
   }
+  
+  .info {
+    display: inline-block;
+    overflow: hidden;
+  }
 
-  .size {
+  .size, .state {
     background: lighten($color-vue-gray, 20%);
     border-radius: 3px;
     color: #fff;
@@ -47,6 +52,19 @@
     font-size: 14px;
     margin: 7px 0 3px;
     padding: 2px 5px;
+  }
+
+  .state {
+    background: transparent;
+    border: 1px solid lighten($color-vue-gray, 20%);
+    color: $color-vue-gray;
+    margin-left: 5px;
+
+    &.finished {
+      background: $color-vue-green;
+      border-color: $color-vue-green;
+      color: #fff;
+    }
   }
 
   .name {

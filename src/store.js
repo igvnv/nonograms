@@ -1,20 +1,46 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {SET_GAME_DATA, SET_GAMES_LIST, SET_GAMES_LIST_LOADING_STATUS} from './mitation-types';
+import * as MutationTypes from './mitation-types';
+import variables from './variables';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     gameData: null,
+    gameProcess: [],
     gamesList: [],
     gamesListLoadingStatus: '',
+    gamesState: {}
   },
   mutations: {
-    [SET_GAME_DATA]: function (state, gameData) {
+    [MutationTypes.SET_GAMES_LIST_STATE]: function (state, gamesListState) {
+      state.gamesState = gamesListState;
+    },
+    [MutationTypes.SET_GAME_STATE]: function (state, payload) {
+      if (typeof payload !== 'object') throw new Error(`${MutationTypes.SET_GAME_STATE}: payload is not Object`);
+      if (!payload.id) throw new Error(`${MutationTypes.SET_GAME_STATE}: game id is not defined`);
+      if (!payload.state && payload.state !== 0) throw new Error(`${MutationTypes.SET_GAME_STATE}: game state is not defined`);
+
+      // Nothing to change
+      if (state.gamesState[payload.id] === payload.state) return;
+
+      let gamesState = state.gamesState;
+      gamesState[payload.id] = payload.state;
+
+      state.gamesState = gamesState;
+
+      localStorage.gamesState = JSON.stringify(state.gamesState);
+    },
+    [MutationTypes.SET_GAME_PROCESS]: function (state, payload) {
+      if (!Array.isArray(payload)) throw new Error(`${MutationTypes.SET_GAME_PROCESS}: payload is not Array`);
+
+      state.gameProcess = payload;
+    },
+    [MutationTypes.SET_GAME_DATA]: function (state, gameData) {
       state.gameData = gameData;
     },
-    [SET_GAMES_LIST_LOADING_STATUS]: function (state, newStatus) {
+    [MutationTypes.SET_GAMES_LIST_LOADING_STATUS]: function (state, newStatus) {
       switch (newStatus) {
         case 'loading':
         case 'done':
@@ -28,13 +54,64 @@ export default new Vuex.Store({
       state.gamesListLoadingStatus = newStatus;
     },
 
-    [SET_GAMES_LIST]: function (state, gamesList) {
+    [MutationTypes.SET_GAMES_LIST]: function (state, gamesList) {
       state.gamesList = gamesList;
     }
   },
+  getters: {
+    gameState: state => gameId => {
+      if (!state.gamesState || !gameId ) return null;
+      return state.gamesState[gameId.toString()];
+    },
+  },
   actions: {
+    loadGameProcess: async function ({commit}, gameId) {
+      commit(MutationTypes.SET_GAME_PROCESS, []);
+
+      let process = [];
+      if (localStorage.gamesProcess) {
+        let processObj = JSON.parse(localStorage.gamesProcess)[gameId.toString()];
+        processObj = JSON.parse(processObj);
+        Object.keys(processObj).forEach(col => {
+          process[parseInt(col)] = processObj[col];
+        });
+      }
+
+      commit(MutationTypes.SET_GAME_PROCESS, process);
+    },
+
+    saveGameProcess: async function ({dispatch}, payload) {
+      let process = {};
+
+      if (localStorage.gamesProcess) {
+        process = JSON.parse(localStorage.gamesProcess);
+      }
+
+      process[payload.id.toString()] = JSON.stringify(Object.assign({}, payload.cells));
+      localStorage.gamesProcess = JSON.stringify(process);
+
+      // Game field was restarted
+      if (!payload.cells.length) {
+        await dispatch('setGameState', {id: payload.id, state: variables.GAME_IS_NEW});
+      }
+    },
+
+    loadGamesState: async function ({commit}) {
+      if (localStorage.gamesState) {
+        commit(MutationTypes.SET_GAMES_LIST_STATE, JSON.parse(localStorage.gamesState));
+      }
+    },
+
+    setGameState: async function ({commit, state, dispatch}, payload) {
+      if (!Object.keys(state.gamesState).length) {
+        await dispatch('loadGamesState');
+      }
+
+      commit(MutationTypes.SET_GAME_STATE, payload);
+    },
+
     loadGameData: async function ({state, commit, dispatch}, payload) {
-      commit(SET_GAME_DATA, null);
+      commit(MutationTypes.SET_GAME_DATA, null);
 
       if (!state.gamesList.length) {
         await dispatch('loadGames');
@@ -43,7 +120,7 @@ export default new Vuex.Store({
       let gameData = state.gamesList.find(game => game.id == payload);
 
       if (gameData) {
-        commit(SET_GAME_DATA, gameData);
+        commit(MutationTypes.SET_GAME_DATA, gameData);
       }
       else {
         console.error(`Game ${payload} not found`);
@@ -54,11 +131,11 @@ export default new Vuex.Store({
       // Games list has been loaded earlier.
       if (state.gamesList.length > 0) return;
 
-      commit(SET_GAMES_LIST, []);
-      commit(SET_GAMES_LIST_LOADING_STATUS, 'loading');
+      commit(MutationTypes.SET_GAMES_LIST, []);
+      commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'loading');
 
       // TODO: Add asynchronous loading games from backend
-      commit(SET_GAMES_LIST, [
+      commit(MutationTypes.SET_GAMES_LIST, [
         {
           'id': 1,
           'name': 'Easy',
@@ -126,7 +203,7 @@ export default new Vuex.Store({
           ]
         }
       ]);
-      commit(SET_GAMES_LIST_LOADING_STATUS, 'done');
+      commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'done');
     }
   }
 })

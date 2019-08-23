@@ -8,7 +8,7 @@
         :class="{'delimiter': !(h % 5 ||  h === fieldHeight), 'active': h === activeCell}"
       >
         <span
-          v-for="(val, index) in gameField['columns'][h-1]"
+          v-for="(val, index) in gameData['columns'][h-1]"
           :key="'cel-'+h+'-'+index"
           :class="{'filled': colFilledChunks[h - 1] && colFilledChunks[h - 1][index]}"
         >
@@ -24,7 +24,7 @@
         :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'active': w === activeRow}"
       >
         <span
-          v-for="(val, index) in gameField['rows'][w-1]"
+          v-for="(val, index) in gameData['rows'][w-1]"
           :key="'row-'+w+'-'+index"
           :class="{'filled': rowFilledChunks[w - 1] && rowFilledChunks[w - 1][index]}"
         >
@@ -63,10 +63,14 @@ import variables from '@/variables';
 
 export default {
   props: {
-    gameField: {
+    gameData: {
       type: Object,
       required: true,
-      default: function () { return {'rows': [], 'columns': []} }
+      default: function () { return {'id': -1, 'rows': [], 'columns': []} }
+    },
+    gameProcess: {
+      type: Array,
+      default: function () { return []; }
     }
   },
 
@@ -83,20 +87,33 @@ export default {
 
   watch: {
     gameField: function () {
-      this.rowFilledChunks = this.gameField['rows'].map(row => row.map(() => false));
-      this.colFilledChunks = this.gameField['columns'].map(col => col.map(() => false));
+      this.rowFilledChunks = this.gameData['rows'].map(row => row.map(() => false));
+      this.colFilledChunks = this.gameData['columns'].map(col => col.map(() => false));
+    },
+
+    gameProcess: function (val) {
+      this.filledCells = val;
+
+      for (let i = 1; i <= this.fieldHeight; ++i) {
+        this.checkFilled(1, i, false);
+      }
+
+      for (let i = 1; i <= this.fieldWidth; ++i) {
+        this.checkFilled(i, 1, false);
+      }
     }
   },
 
   computed: {
     fieldHeight: function () {
-      return this.gameField['rows'].length;
+      return this.gameData['rows'].length;
     },
     fieldWidth: function () {
-      return this.gameField['columns'].length;
+      return this.gameData['columns'].length;
     },
     isFinished: function () {
-      return this.rowFilledChunks.every(chunk => chunk[0] === true) && this.colFilledChunks.every(chunk => chunk[0] === true);
+      return this.rowFilledChunks.every(row => row.every(chunk => chunk === true))
+        && this.colFilledChunks.every(column => column.every(chunk => chunk === true));
     }
   },
 
@@ -149,37 +166,39 @@ export default {
       });
     },
 
-    checkFilled(x, y) {
+    checkFilled(x, y, autoCheckCancelledCells = true) {
       let
-        row = this.gameField['rows'][y - 1],
-        column = this.gameField['columns'][x - 1],
+        row = this.gameData['rows'][y - 1],
+        column = this.gameData['columns'][x - 1],
         columnFilled = this.getFilledSubsequences(this.filledCells[x] || []),
         rowFilled = this.getFilledSubsequences(this.filledCells.map(cell => cell[y] || variables.CELL_EMPTY));
 
       this.$set(this.rowFilledChunks, y - 1, this.checkLine(row, rowFilled));
       this.$set(this.colFilledChunks, x - 1, this.checkLine(column, columnFilled));
 
-      // Row is done!
-      if (this.checkLine(row, rowFilled).every(n => n)) {
-        for (let i=1; i<=this.gameField['rows'].length; ++i) {
-          if (!this.filledCells[i] || this.filledCells[i][y] !== variables.CELL_FILLED) {
-            let cells = this.filledCells[i] || [];
-            cells[y] = variables.CELL_CANCELLED;
-            this.$set(this.filledCells, i, cells);
-          }
-        }
-      }
-
-      // Column is done!
-      if (this.checkLine(column, columnFilled).every(n => n)) {
-        let cells = this.filledCells[x];
-        for (let i=1; i<=this.gameField['columns'].length; ++i) {
-          if (cells[i] !== variables.CELL_FILLED) {
-            cells[i] = variables.CELL_CANCELLED;
+      if (autoCheckCancelledCells) {
+        // Row is done!
+        if (this.checkLine(row, rowFilled).every(n => n)) {
+          for (let i = 1; i <= this.gameData['rows'].length; ++i) {
+            if (!this.filledCells[i] || this.filledCells[i][y] !== variables.CELL_FILLED) {
+              let cells = this.filledCells[i] || [];
+              cells[y] = variables.CELL_CANCELLED;
+              this.$set(this.filledCells, i, cells);
+            }
           }
         }
 
-        this.$set(this.filledCells, x, cells);
+        // Column is done!
+        if (this.checkLine(column, columnFilled).every(n => n)) {
+          let cells = this.filledCells[x];
+          for (let i = 1; i <= this.gameData['columns'].length; ++i) {
+            if (cells[i] !== variables.CELL_FILLED) {
+              cells[i] = variables.CELL_CANCELLED;
+            }
+          }
+
+          this.$set(this.filledCells, x, cells);
+        }
       }
     },
 
@@ -212,6 +231,16 @@ export default {
 
       this.$set(this.filledCells, x, cells);
       this.checkFilled(x, y);
+
+      this.$store.dispatch('setGameState', {
+        id: this.$props.gameData['id'],
+        state: this.isFinished ? variables.GAME_IS_FINISHED : variables.GAME_IN_PROCESS
+      });
+
+      this.$store.dispatch('saveGameProcess', {
+        id: this.$props.gameData['id'],
+        cells: this.filledCells
+      });
     },
 
     toggleCancelled(x, y) {

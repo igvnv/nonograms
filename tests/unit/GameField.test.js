@@ -5,7 +5,7 @@ import variables from '@/variables';
 
 const localVue = createLocalVue();
 
-const propsData = {gameField: {id: 1, name: 'Demo', rows: [[2, 2]], columns: [[2], [2]]}};
+const propsData = {gameData: {id: 1, name: 'Demo', rows: [[2, 2]], columns: [[2], [2]]}};
 
 describe('GameField', () => {
   describe('getFilledSubsequences function', () => {

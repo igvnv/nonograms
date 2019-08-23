@@ -9,7 +9,10 @@
       >
         <router-link :to="{name: 'game', params: {id: game.id}}">
         <span class="number">#{{ game.id}}</span>
-        <span class="size">{{ game.columns.length }}x{{ game.rows.length }}</span>
+        <span class="info">
+          <span class="size">{{ game.columns.length }}x{{ game.rows.length }}</span>
+          <span class="state" :class="gameState(game.id).class">{{ gameState(game.id).label }}</span>
+        </span>
         <span class="name">{{ game.name }}</span>
         </router-link>
       </li>
@@ -18,7 +21,8 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState} from 'vuex';
+import variables from '../variables';
 
 export default {
   name: 'home',
@@ -28,15 +32,19 @@ export default {
   },
 
   computed: {
-    ...mapState(['gamesList', 'gamesListLoadingStatus'])
+    ...mapState(['gamesList', 'gamesListLoadingStatus', 'gamesState'])
   },
 
   methods: {
-    ...mapActions(['loadGames']),
+    gameState: function (gameId) {
+      let stateId = this.gamesState[gameId.toString()];
+      return variables.GAME_STATES[stateId] || variables.GAME_STATES[variables.GAME_IS_NEW];
+    },
   },
 
   mounted() {
-    this.loadGames();
+    this.$store.dispatch('loadGames');
+    this.$store.dispatch('loadGamesState');
   }
 }
 </script>
