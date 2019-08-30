@@ -27,6 +27,7 @@
 import GameField from '@/components/GameField';
 import {mapState} from 'vuex';
 import variables from "../variables";
+import * as ActionsTypes from '../store/actions-types';
 
 export default {
   components: {GameField},
@@ -54,12 +55,12 @@ export default {
     loadGame: async function (gameId) {
       this.gameId = gameId;
 
-      await this.$store.dispatch('loadGameData', gameId);
-      await this.$store.dispatch('loadGameProcess', gameId);
+      await this.$store.dispatch(ActionsTypes.LOAD_GAME_DATA, gameId);
+      await this.$store.dispatch(ActionsTypes.LOAD_GAME_PROCESS, gameId);
     },
     restart: async function () {
-      await this.$store.dispatch('saveGameProcess', {id: this.gameId, cells: []});
-      await this.$store.dispatch('loadGameProcess', this.gameId);
+      await this.$store.dispatch(ActionsTypes.SAVE_GAME_PROCESS, {id: this.gameId, cells: []});
+      await this.$store.dispatch(ActionsTypes.LOAD_GAME_PROCESS, this.gameId);
     }
   },
   mounted() {

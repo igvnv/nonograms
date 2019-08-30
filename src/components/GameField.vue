@@ -60,6 +60,7 @@
 </template>
 <script>
 import variables from '@/variables';
+import * as ActionsTypes from '../store/actions-types';
 
 export default {
   props: {
@@ -232,12 +233,12 @@ export default {
       this.$set(this.filledCells, x, cells);
       this.checkFilled(x, y);
 
-      this.$store.dispatch('setGameState', {
+      this.$store.dispatch(ActionsTypes.SET_GAME_STATE, {
         id: this.$props.gameData['id'],
         state: this.isFinished ? variables.GAME_IS_FINISHED : variables.GAME_IN_PROCESS
       });
 
-      this.$store.dispatch('saveGameProcess', {
+      this.$store.dispatch(ActionsTypes.SAVE_GAME_PROCESS, {
         id: this.$props.gameData['id'],
         cells: this.filledCells
       });

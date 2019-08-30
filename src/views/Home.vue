@@ -23,6 +23,7 @@
 <script>
 import {mapState} from 'vuex';
 import variables from '../variables';
+import * as ActionsTypes from '../store/actions-types';
 
 export default {
   name: 'home',
@@ -43,8 +44,8 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('loadGames');
-    this.$store.dispatch('loadGamesState');
+    this.$store.dispatch(ActionsTypes.LOAD_GAMES);
+    this.$store.dispatch(ActionsTypes.LOAD_GAMES_STATE);
   }
 }
 </script>

@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import * as MutationTypes from './mitation-types';
-import variables from './variables';
+import * as ActionsTypes from './actions-types';
+import * as MutationTypes from './mitations-types';
+import variables from '../variables';
 
 Vue.use(Vuex);
 
@@ -65,7 +66,7 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    loadGameProcess: async function ({commit}, gameId) {
+    [ActionsTypes.LOAD_GAME_PROCESS]: async function ({commit}, gameId) {
       commit(MutationTypes.SET_GAME_PROCESS, []);
 
       let process = [];
@@ -80,7 +81,7 @@ export default new Vuex.Store({
       commit(MutationTypes.SET_GAME_PROCESS, process);
     },
 
-    saveGameProcess: async function ({dispatch}, payload) {
+    [ActionsTypes.SAVE_GAME_PROCESS]: async function ({dispatch}, payload) {
       let process = {};
 
       if (localStorage.gamesProcess) {
@@ -92,29 +93,29 @@ export default new Vuex.Store({
 
       // Game field was restarted
       if (!payload.cells.length) {
-        await dispatch('setGameState', {id: payload.id, state: variables.GAME_IS_NEW});
+        await dispatch(ActionsTypes.SET_GAME_STATE, {id: payload.id, state: variables.GAME_IS_NEW});
       }
     },
 
-    loadGamesState: async function ({commit}) {
+    [ActionsTypes.LOAD_GAMES_STATE]: async function ({commit}) {
       if (localStorage.gamesState) {
         commit(MutationTypes.SET_GAMES_LIST_STATE, JSON.parse(localStorage.gamesState));
       }
     },
 
-    setGameState: async function ({commit, state, dispatch}, payload) {
+    [ActionsTypes.SET_GAME_STATE]: async function ({commit, state, dispatch}, payload) {
       if (!Object.keys(state.gamesState).length) {
-        await dispatch('loadGamesState');
+        await dispatch(ActionsTypes.LOAD_GAMES_STATE);
       }
 
       commit(MutationTypes.SET_GAME_STATE, payload);
     },
 
-    loadGameData: async function ({state, commit, dispatch}, payload) {
+    [ActionsTypes.LOAD_GAME_DATA]: async function ({state, commit, dispatch}, payload) {
       commit(MutationTypes.SET_GAME_DATA, null);
 
       if (!state.gamesList.length) {
-        await dispatch('loadGames');
+        await dispatch(ActionsTypes.LOAD_GAMES);
       }
 
       let gameData = state.gamesList.find(game => game.id == payload);
@@ -127,7 +128,7 @@ export default new Vuex.Store({
       }
     },
 
-    loadGames: async function ({state, commit}) {
+    [ActionsTypes.LOAD_GAMES]: async function ({state, commit}) {
       // Games list has been loaded earlier.
       if (state.gamesList.length > 0) return;
 
