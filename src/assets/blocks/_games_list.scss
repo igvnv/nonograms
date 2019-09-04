@@ -41,6 +41,7 @@
   
   .info {
     display: inline-block;
+    margin-bottom: -3px;
     overflow: hidden;
   }
 
@@ -68,6 +69,15 @@
   }
 
   .name {
+    color: $color-vue-green;
     display: block;
+  }
+
+  .blurred {
+    background: linear-gradient(45deg, darken($color-vue-green, 10%), lighten($color-vue-green, 10%));
+    color: #fff;
+    display: inline-block;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
