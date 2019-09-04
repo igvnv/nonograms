@@ -6,8 +6,12 @@
   grid-template-columns: auto 1fr;
   margin: 0 auto;
 
-  .active {
+  .hovered {
     background: #ffffcc;
+  }
+
+  .active {
+    box-shadow: 0 0 0 2px red inset;
   }
   
   .hNumbers {

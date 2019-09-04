@@ -1,0 +1,50 @@
+@import "config";
+
+button {
+  background: $color-vue-green;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px rgba($color-vue-gray, .5);
+  color: #fff;
+  font-size: 1.1em;
+  height: 35px;
+  line-height: 36px;
+  overflow: hidden;
+  padding: 0 15px;
+  transition: background .2s, box-shadow .2s, transform .2s;
+
+  &:hover {
+    box-shadow: 0 2px 5px rgba($color-vue-gray, .8);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active, &.active {
+    background: $color-vue-gray;
+    color: rgba(#fff, .8);
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background: lighten($color-vue-gray, 50%);
+    box-shadow: none;
+    color: rgba(#fff, .5);
+  }
+
+  &.selected {
+    background: darken($color-vue-green, 5%);
+    box-shadow: 0 2px 2px rgba($color-vue-gray, .5) inset;
+
+    &:active, &.active {
+      background: lighten($color-vue-gray, 20%);
+      color: rgba(#fff, .8);
+      transform: none;
+    }
+
+    &:hover {
+      background: darken($color-vue-green, 7%);
+    }
+  }
+}

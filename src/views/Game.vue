@@ -15,27 +15,53 @@
 
     <div v-show="!gameData">Game is loading...</div>
 
-    <GameField v-if="gameData" :gameData="gameData" :gameProcess="gameProcess" />
+    <GameField
+      v-if="gameData"
+      ref="gameField"
+      :gameData="gameData"
+      :gameProcess="gameProcess"
+      :controlledByKeyboard="gameMode === variables.GAME_MODE_KEYBOARD"
+    />
 
     <div class="actions">
       <button @click="restart" :disabled="gameState === newGameStatus">Restart the game</button>
     </div>
+
+    <div class="modes">
+      <button
+        :class="{'selected': gameMode === variables.GAME_MODE_MOUSE}"
+        @click="gameMode = variables.GAME_MODE_MOUSE"
+      >Mouse</button>
+      <button
+        :class="{'selected': gameMode === variables.GAME_MODE_KEYBOARD}"
+        @click="gameMode = variables.GAME_MODE_KEYBOARD"
+      >Keyboard</button>
+    </div>
+
+    <GameKeyboard
+      v-if="gameMode === variables.GAME_MODE_KEYBOARD"
+      @move="moveActiveCell($event)"
+      @select="selectActiveCell($event)"
+    />
   </div>
 </template>
 
 <script>
 import GameField from '@/components/GameField';
+import GameKeyboard from '@/components/GameKeyboard';
 import {mapState} from 'vuex';
 import variables from "../variables";
 import * as ActionsTypes from '../store/actions-types';
 
 export default {
-  components: {GameField},
+  components: {GameField, GameKeyboard},
   data: function () {
     return {
       gameId: null,
+      gameMode: variables.GAME_MODE_MOUSE,
       newGameStatus: variables.GAME_IS_NEW,
       showDonePopup: false,
+      variables: variables
     };
   },
   computed: {
@@ -52,6 +78,14 @@ export default {
     }
   },
   methods: {
+    moveActiveCell: function(direction) {
+      this.$refs.gameField.moveActiveCell(direction);
+    },
+
+    selectActiveCell: function(state) {
+      this.$refs.gameField.setActiveCellState(state);
+    },
+
     loadGame: async function (gameId) {
       this.gameId = gameId;
 

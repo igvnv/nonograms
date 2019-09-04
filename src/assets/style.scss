@@ -2,8 +2,10 @@
 
 @import "grid";
 @import "typografy";
+@import "buttons";
 
-@import "blocks/field";
 @import "blocks/game";
+@import "blocks/game_field";
+@import "blocks/game_keyboard";
 @import "blocks/games_list";
 @import "blocks/header";

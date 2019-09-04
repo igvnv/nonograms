@@ -5,7 +5,7 @@
       <div
         v-for="h in fieldHeight"
         :key="h"
-        :class="{'delimiter': !(h % 5 ||  h === fieldHeight), 'active': h === activeCell}"
+        :class="{'delimiter': !(h % 5 ||  h === fieldHeight), 'hovered': h === activeCell}"
       >
         <span
           v-for="(val, index) in gameData['columns'][h-1]"
@@ -21,7 +21,7 @@
       <div
         v-for="w in fieldWidth"
         :key="w"
-        :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'active': w === activeRow}"
+        :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'hovered': w === activeRow}"
       >
         <span
           v-for="(val, index) in gameData['rows'][w-1]"
@@ -37,14 +37,15 @@
       <template v-for="w in fieldWidth">
         <div
           :key="w"
-          :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'active': w === activeRow}"
+          :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'hovered': w === activeRow}"
         >
           <template v-for="h in fieldHeight">
             <span
               :class="[
                 cellClassName(cellState(h, w)),
                 !(h % 5 ||  h === fieldHeight) ? 'delimiter' : '',
-                h === activeCell ? 'active': ''
+                h === activeCell ? 'hovered': '',
+                h === activeCell && w === activeRow && controlledByKeyboard ? 'active': ''
               ]"
               :key="h"
               @mousedown.prevent="cellClick(h, w)"
@@ -72,6 +73,10 @@ export default {
     gameProcess: {
       type: Array,
       default: function () { return []; }
+    },
+    controlledByKeyboard: {
+      type: Boolean,
+      default: function () { return false; }
     }
   },
 
@@ -101,6 +106,12 @@ export default {
 
       for (let i = 1; i <= this.fieldWidth; ++i) {
         this.checkFilled(i, 1, false);
+      }
+    },
+    controlledByKeyboard: function (val) {
+      if ( val && !this.activeCell && !this.activeRow) {
+        this.activeCell = 1;
+        this.activeRow = 1;
       }
     }
   },
@@ -203,6 +214,23 @@ export default {
       }
     },
 
+    moveActiveCell(direction) {
+      switch (direction) {
+        case 'down':
+          this.activeRow = this.activeRow >= this.fieldHeight ? 1 : this.activeRow + 1;
+          break;
+        case 'up':
+          this.activeRow = this.activeRow <= 1 ? this.fieldHeight : this.activeRow - 1;
+          break;
+        case 'left':
+          this.activeCell = this.activeCell <= 1 ? this.fieldWidth : this.activeCell - 1;
+          break;
+        case 'right':
+          this.activeCell = this.activeCell >= this.fieldWidth ? 1 : this.activeCell + 1;
+          break;
+      }
+    },
+
     cellHover(x, y) {
       this.activeCell = x;
       this.activeRow = y;
@@ -224,6 +252,10 @@ export default {
       }
 
       this.setCellState(x, y, newState);
+    },
+
+    setActiveCellState(newState) {
+      this.setCellState(this.activeCell, this.activeRow, newState);
     },
 
     setCellState(x, y, newState) {
