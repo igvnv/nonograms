@@ -124,5 +124,32 @@ describe('GameKeyboard', () => {
       expect(wrapper.emitted('select').length).toBe(1);
       expect(wrapper.emitted('select')[0]).toEqual([variables.CELL_FILLED]);
     });
+
+    it('emits "select" event with "CELL_FILLED" payload on key Z press', () => {
+      const wrapper = shallowMount(GameKeyboard, {localVue});
+      let event = new KeyboardEvent('keyup', {code: 'KeyZ'});
+      document.dispatchEvent(event);
+
+      expect(wrapper.emitted('select').length).toBe(1);
+      expect(wrapper.emitted('select')[0]).toEqual([variables.CELL_FILLED]);
+    });
+
+    it('emits "select" event with "CELL_CANCELLED" payload on key X press', () => {
+      const wrapper = shallowMount(GameKeyboard, {localVue});
+      let event = new KeyboardEvent('keyup', {code: 'KeyX'});
+      document.dispatchEvent(event);
+
+      expect(wrapper.emitted('select').length).toBe(1);
+      expect(wrapper.emitted('select')[0]).toEqual([variables.CELL_CANCELLED]);
+    });
+
+    it('emits "select" event with "CELL_EMPTY" payload on key C press', () => {
+      const wrapper = shallowMount(GameKeyboard, {localVue});
+      let event = new KeyboardEvent('keyup', {code: 'KeyC'});
+      document.dispatchEvent(event);
+
+      expect(wrapper.emitted('select').length).toBe(1);
+      expect(wrapper.emitted('select')[0]).toEqual([variables.CELL_EMPTY]);
+    });
   });
 });

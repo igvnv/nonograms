@@ -13,19 +13,19 @@
         ref="cellSelectButton"
         :class="{'selected': mode === variables.KEYBOARD_MODE_SELECT}"
         @click="setMode(variables.KEYBOARD_MODE_SELECT)"
-      ></button>
+      ><span class="key">Z</span></button>
       <button
         class="cancel"
         ref="cellSelectCancel"
         :class="{'selected': mode === variables.KEYBOARD_MODE_CANCEL}"
         @click="setMode(variables.KEYBOARD_MODE_CANCEL)"
-      ></button>
+      ><span class="key">X</span></button>
       <button
         class="clean"
         ref="cellSelectClean"
         :class="{'selected': mode === variables.KEYBOARD_MODE_CLEAN}"
         @click="setMode(variables.KEYBOARD_MODE_CLEAN)"
-      ></button>
+      ><span class="key">C</span></button>
     </div>
   </div>
 </template>
@@ -94,6 +94,15 @@ export default {
         case 'ArrowRight':
           affectedButton = this.$refs.arrowRightButton;
           this.arrowRight();
+          break;
+        case 'KeyZ':
+          this.setMode(variables.KEYBOARD_MODE_SELECT);
+          break;
+        case 'KeyX':
+          this.setMode(variables.KEYBOARD_MODE_CANCEL);
+          break;
+        case 'KeyC':
+          this.setMode(variables.KEYBOARD_MODE_CLEAN);
           break;
         case 'Enter':
         case 'Space':
