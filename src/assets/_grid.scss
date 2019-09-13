@@ -1,3 +1,12 @@
+@import "config";
+
+#app {
+  display: grid;
+  grid-template-rows: $header-height 1fr $footer-height;
+  height: 100vh;
+  max-height: 100vh;
+}
+
 .container {
   margin: 25px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div id="game" class="container">
+  <div id="game" class="container" :class="{'hasKeyboard': gameMode === variables.GAME_MODE_KEYBOARD}">
     <div class="done" v-if="showDonePopup">
       <p>Congratulations! Game is finished!</p>
       <div class="buttons">
@@ -15,34 +15,34 @@
 
     <div v-show="!gameData">Game is loading...</div>
 
-    <GameField
-      v-if="gameData"
-      ref="gameField"
-      :gameData="gameData"
-      :gameProcess="gameProcess"
-      :controlledByKeyboard="gameMode === variables.GAME_MODE_KEYBOARD"
-    />
-
-    <div class="actions">
-      <button @click="restart" :disabled="gameState === newGameStatus">Restart the game</button>
+    <div class="gameField">
+      <GameField
+        v-if="gameData"
+        ref="gameField"
+        :gameData="gameData"
+        :gameProcess="gameProcess"
+        :controlledByKeyboard="gameMode === variables.GAME_MODE_KEYBOARD"
+      />
     </div>
 
-    <div class="modes">
-      <button
-        :class="{'selected': gameMode === variables.GAME_MODE_MOUSE}"
-        @click="gameMode = variables.GAME_MODE_MOUSE"
-      >Mouse</button>
-      <button
-        :class="{'selected': gameMode === variables.GAME_MODE_KEYBOARD}"
-        @click="gameMode = variables.GAME_MODE_KEYBOARD"
-      >Keyboard</button>
-    </div>
+    <div class="controls" v-if="gameData">
+      <div class="buttons">
+        <button
+          :disabled="gameState === variables.GAME_IS_NEW"
+          @click="restart"
+        ><span class="restartIcon"></span>Restart</button>
+        <button
+          :class="{'selected': gameMode === variables.GAME_MODE_KEYBOARD}"
+          @click="gameMode = gameMode === variables.GAME_MODE_KEYBOARD ? variables.GAME_MODE_MOUSE : variables.GAME_MODE_KEYBOARD"
+        ><span class="keyboardIcon"></span>Keyboard</button>
+      </div>
 
-    <GameKeyboard
-      v-if="gameMode === variables.GAME_MODE_KEYBOARD"
-      @move="moveActiveCell($event)"
-      @select="selectActiveCell($event)"
-    />
+      <GameKeyboard
+        v-if="gameMode === variables.GAME_MODE_KEYBOARD"
+        @move="moveActiveCell($event)"
+        @select="selectActiveCell($event)"
+      />
+    </div>
   </div>
 </template>
 
@@ -59,7 +59,6 @@ export default {
     return {
       gameId: null,
       gameMode: variables.GAME_MODE_MOUSE,
-      newGameStatus: variables.GAME_IS_NEW,
       showDonePopup: false,
       variables: variables
     };
@@ -75,6 +74,9 @@ export default {
       if (oldVal && newVal !== oldVal && newVal === variables.GAME_IS_FINISHED) {
         this.showDonePopup = true;
       }
+    },
+    gameMode: function () {
+      this.$refs.gameField.adjustFieldToScreen();
     }
   },
   methods: {
@@ -91,6 +93,8 @@ export default {
 
       await this.$store.dispatch(ActionsTypes.LOAD_GAME_DATA, gameId);
       await this.$store.dispatch(ActionsTypes.LOAD_GAME_PROCESS, gameId);
+
+      this.$refs.gameField.adjustFieldToScreen();
     },
     restart: async function () {
       await this.$store.dispatch(ActionsTypes.SAVE_GAME_PROCESS, {id: this.gameId, cells: []});

@@ -1,0 +1,12 @@
+@import "../config";
+
+footer {
+  background: lighten($color-vue-gray, 10%);
+  color: #fff;
+  font-size: .7em;
+  height: $footer-height;
+  line-height: $footer-height;
+  padding: 0 25px;
+  text-align: center;
+  z-index: 10;
+}

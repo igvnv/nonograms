@@ -3,7 +3,8 @@
 #gameKeyboard {
   align-items: center;
   display: flex;
-  margin-top: 50px;
+  margin: 20px auto 0;
+  width: 325px;
 }
 
 #dPad {
@@ -206,7 +207,7 @@
       font-size: 12px;
       height: 25px;
       left: 50%;
-      line-height: 20px;
+      line-height: 18px;
       margin-left: -12px;
       opacity: .5;
       position: absolute;

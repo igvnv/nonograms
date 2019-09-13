@@ -1,61 +1,63 @@
 <template>
-  <div id="field">
-    <div class="space"></div>
-    <div class="hNumbers">
-      <div
-        v-for="h in fieldHeight"
-        :key="h"
-        :class="{'delimiter': !(h % 5 ||  h === fieldHeight), 'hovered': h === activeCell}"
-      >
-        <span
-          v-for="(val, index) in gameData['columns'][h-1]"
-          :key="'cel-'+h+'-'+index"
-          :class="{'filled': colFilledChunks[h - 1] && colFilledChunks[h - 1][index]}"
-        >
-          {{ val }}
-        </span>
-      </div>
-    </div>
-
-    <div class="wNumbers">
-      <div
-        v-for="w in fieldWidth"
-        :key="w"
-        :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'hovered': w === activeRow}"
-      >
-        <span
-          v-for="(val, index) in gameData['rows'][w-1]"
-          :key="'row-'+w+'-'+index"
-          :class="{'filled': rowFilledChunks[w - 1] && rowFilledChunks[w - 1][index]}"
-        >
-          {{ val }}
-        </span>
-      </div>
-    </div>
-
-    <div class="game" @mouseleave="isMouseDragging = false" @mouseup="isMouseDragging = false">
-      <template v-for="w in fieldWidth">
+  <div id="gameFieldWrapper" ref="fieldLayout" :style="cssVariables">
+    <div id="field" ref="gameField">
+      <div class="space"></div>
+      <div class="hNumbers">
         <div
+          v-for="h in fieldHeight"
+          :key="h"
+          :class="{'delimiter': !(h % 5 ||  h === fieldHeight), 'hovered': h === activeCell}"
+        >
+          <span
+            v-for="(val, index) in gameData['columns'][h-1]"
+            :key="'cel-'+h+'-'+index"
+            :class="{'filled': colFilledChunks[h - 1] && colFilledChunks[h - 1][index]}"
+          >
+            {{ val }}
+          </span>
+        </div>
+      </div>
+
+      <div class="wNumbers">
+        <div
+          v-for="w in fieldWidth"
           :key="w"
           :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'hovered': w === activeRow}"
         >
-          <template v-for="h in fieldHeight">
-            <span
-              :class="[
-                cellClassName(cellState(h, w)),
-                !(h % 5 ||  h === fieldHeight) ? 'delimiter' : '',
-                h === activeCell ? 'hovered': '',
-                h === activeCell && w === activeRow && controlledByKeyboard ? 'active': ''
-              ]"
-              :key="h"
-              @mousedown.prevent="cellClick(h, w)"
-              @contextmenu.prevent="toggleCancelled(h, w)"
-              @mouseover="cellHover(h, w)"
-              class="cell"
-            ></span>
-          </template>
+          <span
+            v-for="(val, index) in gameData['rows'][w-1]"
+            :key="'row-'+w+'-'+index"
+            :class="{'filled': rowFilledChunks[w - 1] && rowFilledChunks[w - 1][index]}"
+          >
+            {{ val }}
+          </span>
         </div>
-      </template>
+      </div>
+
+      <div class="game" @mouseleave="isMouseDragging = false" @mouseup="isMouseDragging = false">
+        <template v-for="w in fieldWidth">
+          <div
+            :key="w"
+            :class="{'delimiter': !(w % 5 ||  w === fieldWidth), 'hovered': w === activeRow}"
+          >
+            <template v-for="h in fieldHeight">
+              <span
+                :class="[
+                  cellClassName(cellState(h, w)),
+                  !(h % 5 ||  h === fieldHeight) ? 'delimiter' : '',
+                  h === activeCell ? 'hovered': '',
+                  h === activeCell && w === activeRow && controlledByKeyboard ? 'active': ''
+                ]"
+                :key="h"
+                @mousedown.prevent="cellClick(h, w)"
+                @contextmenu.prevent="toggleCancelled(h, w)"
+                @mouseover="cellHover(h, w)"
+                class="cell"
+              ></span>
+            </template>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -87,7 +89,8 @@ export default {
       activeRow: null,
       activeCell: null,
       rowFilledChunks: [],
-      colFilledChunks: []
+      colFilledChunks: [],
+      cellSize: 20
     };
   },
 
@@ -126,10 +129,68 @@ export default {
     isFinished: function () {
       return this.rowFilledChunks.every(row => row.every(chunk => chunk === true))
         && this.colFilledChunks.every(column => column.every(chunk => chunk === true));
+    },
+    cssVariables: function () {
+      return {
+        '--cell-height': `${this.cellSize}px`,
+        '--cell-width': `${this.cellSize}px`,
+        '--cell-font-size': `${Math.floor(this.cellSize * .6)}px`
+      };
     }
   },
 
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.adjustFieldToScreen);
+    });
+  },
+
+  destroyed() {
+    window.removeEventListener('resize', this.adjustFieldToScreen);
+  },
+
   methods: {
+    /**
+     * Adjusts the game fields' size depending on the screen size.
+     */
+    adjustFieldToScreen() {
+      // We must wait until keyboard will be added to or removed from layout.
+      this.$nextTick(() => {
+        let
+          layoutWidth = this.$refs.fieldLayout.clientWidth,
+          layoutHeight = this.$refs.fieldLayout.clientHeight;
+
+        let
+          gameVisibleHeight = document.getElementById('app').clientHeight,
+          gameFullHeight = document.getElementById('app').scrollHeight;
+
+        // Global layout has vertical scroll
+        if (gameFullHeight > gameVisibleHeight) {
+          layoutHeight -= gameFullHeight - gameVisibleHeight;
+        }
+
+        let
+          gameVisibleWidth = document.getElementById('app').clientWidth,
+          gameFullWidth = document.getElementById('app').scrollWidth;
+
+        // Global layout has horizontal scroll
+        if (gameFullWidth > gameVisibleWidth) {
+          layoutWidth -= gameFullWidth - gameVisibleWidth;
+        }
+
+        const
+          gameFieldWidth = this.$refs.gameField.scrollWidth,
+          gameFieldHeight = this.$refs.gameField.scrollHeight,
+
+          widthRatio = layoutWidth / gameFieldWidth,
+          heightRatio = layoutHeight / gameFieldHeight,
+
+          ratio = Math.min(widthRatio, heightRatio);
+
+        this.cellSize = Math.floor(this.cellSize * ratio);
+      });
+    },
+
     cellClick(x, y) {
       this.toggleCellState(x, y);
       this.isMouseDragging = true
@@ -294,8 +355,6 @@ export default {
           return 'filled';
         case variables.CELL_CANCELLED:
           return 'cancelled';
-        case variables.CELL_NOTICED:
-          return 'noticed';
       }
 
       return 'empty';

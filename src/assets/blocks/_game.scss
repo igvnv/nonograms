@@ -1,17 +1,22 @@
 @import "../config";
 
 #game {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-rows: 1fr 35px;
   position: relative;
 
-  .actions {
-    margin-top: 15px;
+  &.hasKeyboard {
+    grid-template-rows: 1fr 190px;
   }
 
-  .modes {
-    margin-top: 10px;
+  .controls {
+    text-align: center;
 
-    button {
-      margin-right: 5px;
+    .buttons {
+      button {
+        margin-right: 10px;
+      }
     }
   }
 
@@ -53,6 +58,72 @@
     z-index: 9;
   }
 }
+button:hover {
+  .restartIcon {
+    animation: restartIconAnimation .4s;
+  }
+
+  &:disabled {
+    .restartIcon {
+      animation: none;
+    }
+  }
+}
+
+button:disabled {
+  .restartIcon {
+    opacity: .5;
+  }
+}
+
+.restartIcon {
+  border: 3px solid white;
+  border-radius: 50%;
+  border-right-color: transparent;
+  display: inline-block;
+  float: left;
+  height: 20px;
+  margin: 8px 10px 0 0;
+  position: relative;
+  width: 20px;
+
+  &:before {
+    border-color: transparent;
+    border-left-color: #fff;
+    border-style: solid;
+    border-width: 5px 6px;
+    content: '';
+    left: 10px;
+    position: absolute;
+    top: 0;
+    transform: rotate(45deg);
+  }
+}
+
+.keyboardIcon {
+  display: inline-block;
+  float: left;
+  height: 20px;
+  margin: 8px 10px 0 0;
+  position: relative;
+  width: 20px;
+
+  &:before, &:after {
+    background: #fff;
+    border-radius: 3px;
+    content: '';
+    height: 20px;
+    left: 50%;
+    margin: -10px 0 0 -3px;
+    position: absolute;
+    top: 50%;
+    width: 6px;
+  }
+
+  &:after {
+    transform: rotate(90deg);
+  }
+}
 
 @keyframes showDonePopup {
   from {
@@ -62,5 +133,14 @@
   to {
     margin-top: 0;
     opacity: 1;
+  }
+}
+
+@keyframes restartIconAnimation {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

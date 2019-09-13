@@ -1,10 +1,21 @@
 @import "../config";
 
+:root {
+  --cell-height: 20px;
+  --cell-font-size: 14px;
+  --cell-width: 20px;
+}
+
+#gameFieldWrapper {
+  height: 100%;
+  text-align: center;
+}
+
 #field {
-  border: 2px solid $color-vue-gray;
   display: inline-grid;
+  font-size: var(--cell-font-size);
   grid-template-columns: auto 1fr;
-  margin: 0 auto;
+  outline: 2px solid $color-vue-gray;
 
   .hovered {
     background: #ffffcc;
@@ -24,7 +35,7 @@
       float: left;
       justify-content: flex-end;
       text-align: center;
-      width: 20px;
+      width: var(--cell-width);
 
       &.delimiter {
         border-right: 1px solid $color-vue-gray;
@@ -32,6 +43,8 @@
     }
 
     span {
+      height: var(--cell-height);
+      line-height: var(--cell-height);
       padding: 2px 0;
     }
   }
@@ -52,9 +65,10 @@
 
     span {
       display: block;
-      height: 20px;
-      line-height: 20px;
+      height: var(--cell-height);
+      line-height: var(--cell-height);
       padding: 0 5px;
+      width: var(--cell-width);
     }
   }
 
@@ -63,22 +77,21 @@
       position: relative;
 
       &.filled {
-        opacity: .5;
+        color: rgba(#000, .5);
 
         &:before, &:after {
-          background: black;
+          background: $color-vue-gray;
           content: '';
           height: 1px;
           left: 50%;
-          margin: 0 0 0 -10px;
           position: absolute;
           top: 50%;
-          transform: rotate(45deg);
-          width: 20px;
+          transform: translate(-50%, -50%) rotate(45deg);
+          width: 100%;
         }
 
         &:after {
-          transform: rotate(-45deg);
+          transform: translate(-50%, -50%) rotate(-45deg);
         }
       }
     }
@@ -102,8 +115,8 @@
       cursor: pointer;
       display: block;
       float: left;
-      height: 20px;
-      width: 20px;
+      height: var(--cell-height);
+      width: var(--cell-width);
 
       &.delimiter {
         border-right: 1px solid $color-vue-gray;
