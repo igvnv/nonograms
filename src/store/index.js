@@ -29,7 +29,13 @@ export default new Vuex.Store({
       if (state.gamesState[payload.id] === payload.state) return;
 
       let gamesState = state.gamesState;
-      gamesState[payload.id] = payload.state;
+
+      if (gamesState[payload.id] === undefined) {
+        Vue.set(state.gamesState, payload.id, payload.state);
+      }
+      else {
+        gamesState[payload.id] = payload.state;
+      }
 
       state.gamesState = gamesState;
 
@@ -74,7 +80,7 @@ export default new Vuex.Store({
       let process = [];
       if (localStorage.gamesProcess) {
         let processObj = JSON.parse(localStorage.gamesProcess)[gameId.toString()];
-        processObj = JSON.parse(processObj);
+        processObj = JSON.parse(processObj || "{}");
         Object.keys(processObj).forEach(col => {
           process[parseInt(col)] = processObj[col];
         });

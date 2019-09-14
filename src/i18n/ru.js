@@ -16,7 +16,7 @@ export default Object.freeze({
     loading_error: 'Что-то пошло не так и не удалось загрузить игру... Попробуй перезагрузить страницу.',
     game_is_finished: 'Поздравляю! Игра завершена!',
     continue_game: 'Продолжить',
-    go_to_games_list: 'Перейти к саписку игр',
+    go_to_games_list: 'Перейти к списку игр',
     game_is_loading: 'Загружаем игру...',
     restart: 'Начать заново',
     keyboard: 'Клавиатура'

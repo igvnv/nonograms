@@ -93,6 +93,7 @@ export default {
 
     loadGame: async function (gameId) {
       this.gameId = gameId;
+      this.loadingError = false;
 
       try {
         await this.$store.dispatch(ActionsTypes.LOAD_GAME_DATA, gameId);
@@ -101,6 +102,7 @@ export default {
         this.$refs.gameField.adjustFieldToScreen();
       }
       catch (e) {
+        console.error(e);
         this.loadingError = true;
       }
     },
