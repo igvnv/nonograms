@@ -10,9 +10,16 @@
       Nonograms
     </h1>
 
-    <nav>
-      <router-link :to="{name: 'home'}">Home</router-link> |
-      <router-link :to="{name: 'about'}">About</router-link>
+    <nav v-show="this.$router.currentRoute.name !== 'choose_language'">
+      <router-link :to="{name: 'home'}">{{ $t('header.home') }}</router-link> |
+      <router-link :to="{name: 'about'}">{{ $t('header.about') }}</router-link> |
+      <span class="dropdown">
+        <span class="label">{{ $t('header.language') }}</span>
+        <ul>
+          <li @click="changeLanguage('en')" :class="{active: this.$i18n.locale === 'en'}">English</li>
+          <li @click="changeLanguage('ru')" :class="{active: this.$i18n.locale === 'ru'}">Русский</li>
+        </ul>
+      </span>
     </nav>
   </header>
 </template>
@@ -28,6 +35,17 @@ export default {
       }
 
       document.querySelector('link[rel=icon]').href = `${iconName}.png`;
+    },
+    changeLanguage: function (language) {
+      let toRoute = {...this.$router.currentRoute};
+
+      // "Page not found"
+      if (toRoute.name === 'not_found') {
+        toRoute = {name: 'home', params: {}};
+      }
+
+      toRoute.params.lang = language;
+      this.$router.push(toRoute);
     }
   }
 }

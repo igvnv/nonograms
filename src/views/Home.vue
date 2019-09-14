@@ -1,17 +1,17 @@
 <template>
   <div class="home container">
-    <h2>Choose your game!</h2>
+    <h2>{{ $t('gamesList.title')}}</h2>
 
     <ul id="gamesList">
       <li
         v-for="game in gamesList"
         :key="game.id"
       >
-        <router-link :to="{name: 'game', params: {id: game.id}}">
+        <router-link :to="{name: 'game', params: {id: game.id, lang: self.$i18n.locale}}">
           <span class="number">#{{ game.id}}</span>
           <span class="info">
             <span class="size">{{ game.columns.length }}x{{ game.rows.length }}</span>
-            <span class="state" :class="gameState(game.id).class">{{ gameState(game.id).label }}</span>
+            <span class="state" :class="gameState(game.id).class">{{ $t('gamesList.gameState.' + gameState(game.id).label) }}</span>
           </span>
           <span class="name">
             <span
@@ -39,7 +39,8 @@ export default {
 
   data: function () {
     return {
-      variables: variables
+      variables: variables,
+      self: this
     };
   },
 

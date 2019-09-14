@@ -125,6 +125,14 @@ button:disabled {
   }
 }
 
+.errorMessage {
+  color: $color-vue-red;
+  background: lighten($color-vue-red, 25%);
+  padding: 20px;
+  text-align: center;
+  align-self: center;
+}
+
 @keyframes showDonePopup {
   from {
     margin-top: -20px;

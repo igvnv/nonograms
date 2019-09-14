@@ -8,9 +8,9 @@ export default Object.freeze({
   GAME_IS_FINISHED: 2,
 
   GAME_STATES: {
-    0: {'class': 'new', 'label': 'You have not played it yet'},
-    1: {'class': 'inProcess', 'label': 'In Process'},
-    2: {'class': 'finished', 'label': 'Finished!'},
+    0: {'class': 'new', 'label': 'new_game'},
+    1: {'class': 'inProcess', 'label': 'in_process'},
+    2: {'class': 'finished', 'label': 'finished'},
   },
 
   GAME_MODE_MOUSE: 1,

@@ -19,6 +19,61 @@ header {
       text-decoration: none;
     }
   }
+
+  .dropdown {
+    display: inline-block;
+    position: relative;
+
+    .label {
+      color: $color-vue-green;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: -20px;
+      padding-bottom: 20px;
+      padding-right: 20px;
+
+      &:after {
+        content: '';
+        border: 5px solid transparent;
+        border-top-color: $color-vue-green;
+        position: absolute;
+        right: 0;
+        top: 50%;
+      }
+    }
+
+    &:hover {
+      ul {
+        display: block;
+        z-index: 11;
+      }
+    }
+
+    ul {
+      background: #fff;
+      border: 1px solid $color-vue-gray;
+      border-radius: 5px;
+      color: $color-vue-green;
+      display: none;
+      left: 50%;
+      overflow: hidden;
+      position: absolute;
+      top: 30px;
+      transform: translateX(-50%);
+
+      li {
+        cursor: pointer;
+        display: block;
+        padding: 5px 15px;
+        text-decoration: none;
+
+        &.active {
+          background: $color-vue-green;
+          color: #fff;
+        }
+      }
+    }
+  }
 }
 
 h1 {
