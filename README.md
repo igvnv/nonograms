@@ -1,5 +1,7 @@
 # Nonograms
 
+Demo: https://rpetrov.ru/nonograms/
+
 ## Goals
 
 - Learning Vue.js
