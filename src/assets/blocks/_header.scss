@@ -1,5 +1,7 @@
 @import "../config";
 
+$tablet-width: 1000px;
+
 header {
   align-items: center;
   background: $color-vue-gray;
@@ -20,56 +22,213 @@ header {
     }
   }
 
-  .dropdown {
-    display: inline-block;
+  nav {
     position: relative;
 
-    .label {
-      color: $color-vue-green;
+    .burger {
       cursor: pointer;
-      display: inline-block;
-      margin-bottom: -20px;
-      padding-bottom: 20px;
-      padding-right: 20px;
+      display: block;
+      height: 24px;
+      width: 30px;
+
+      &:before, &:after {
+        background: $color-vue-green;
+        content: '';
+        height: 4px;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transition: transform .2s, margin .2s;
+        width: 30px;
+      }
 
       &:after {
-        content: '';
-        border: 5px solid transparent;
-        border-top-color: $color-vue-green;
+        bottom: 0;
+        top: auto;
+      }
+
+      span {
+        background: $color-vue-green;
+        height: 4px;
+        margin-top: -2px;
         position: absolute;
-        right: 0;
         top: 50%;
+        width: 100%;
+      }
+
+      &.opened {
+        &:before, &:after {
+          margin-left: -10px;
+          transform: rotate(-45deg) translateY(14px);
+        }
+
+        &:after {
+          transform: rotate(45deg) translateY(-14px);
+        }
+
+        span {
+          display: none;
+        }
       }
     }
 
-    &:hover {
-      ul {
+    > ul {
+      background: $color-vue-gray;
+      display: none;
+      padding: 10px;
+      position: absolute;
+      right: 0;
+      top: 45px;
+      width: 200px;
+
+      &.opened {
         display: block;
-        z-index: 11;
       }
+
+      > li {
+        margin: 5px 0;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .dropdown {
+    border: 1px solid white;
+    border-radius: 10px;
+    margin-top: 25px;
+
+    .label {
+      background: $color-vue-gray;
+      display: inline-block;
+      font-size: .85em;
+      margin-left: 25px;
+      padding: 0 5px;
+      transform: translateY(-70%);
     }
 
     ul {
-      background: #fff;
-      border: 1px solid $color-vue-gray;
-      border-radius: 5px;
+      margin: -5px 10px 10px;
+    }
+
+    li {
       color: $color-vue-green;
-      display: none;
-      left: 50%;
-      overflow: hidden;
-      position: absolute;
-      top: 30px;
-      transform: translateX(-50%);
+      cursor: pointer;
+      margin: 5px 0;
+      position: relative;
+      padding-left: 20px;
 
-      li {
+      &.active {
+        color: #fff;
+
+        &:before {
+          border-bottom: 2px solid #fff;
+          border-left: 2px solid #fff;
+          content: '';
+          display: inline-block;
+          height: 5px;
+          left: 0;
+          position: absolute;
+          top: 3px;
+          transform: rotate(-45deg);
+          width: 10px;
+        }
+      }
+    }
+  }
+
+  // Menu for wide screens
+  @media (min-width: $tablet-width) {
+    nav {
+      .burger {
+        display: none;
+      }
+
+      > ul {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        right: auto;
+        top: auto;
+        width: auto;
+
+        &.opened {
+          display: flex;
+        }
+
+        > li {
+          &:before {
+            content: '|';
+            margin: 0 10px;
+          }
+          &:first-child:before {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .dropdown {
+      border: none;
+      display: inline-block;
+      margin: 0;
+      position: relative;
+
+      .label {
+        color: $color-vue-green;
         cursor: pointer;
-        display: block;
-        padding: 5px 15px;
-        text-decoration: none;
+        display: inline-block;
+        font-size: 1em;
+        margin: 0 0 -20px;
+        padding: 0 20px 20px 0;
+        transform: none;
 
-        &.active {
-          background: $color-vue-green;
-          color: #fff;
+        &:after {
+          border: 5px solid transparent;
+          border-top-color: $color-vue-green;
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 50%;
+        }
+      }
+
+      &:hover {
+        ul {
+          display: block;
+          z-index: 11;
+        }
+      }
+
+      ul {
+        background: #fff;
+        border: 1px solid $color-vue-gray;
+        border-radius: 5px;
+        color: $color-vue-green;
+        display: none;
+        overflow: hidden;
+        position: absolute;
+        right: -15px;
+        top: 30px;
+
+        li {
+          cursor: pointer;
+          display: block;
+          padding: 5px 15px 5px 30px;
+          text-decoration: none;
+
+          &.active {
+            background: $color-vue-green;
+            color: #fff;
+
+            &:before {
+              left: 8px;
+              top: 8px;
+            }
+          }
         }
       }
     }
