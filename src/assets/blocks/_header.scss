@@ -80,6 +80,7 @@ header {
       right: 0;
       top: 45px;
       width: 200px;
+      z-index: 5;
 
       &.opened {
         display: block;
