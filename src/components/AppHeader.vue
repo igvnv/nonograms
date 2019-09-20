@@ -13,7 +13,7 @@
     <nav ref="navbar" v-show="this.$router.currentRoute.name !== 'choose_language'">
       <span class="burger" @click="menuOpened = !menuOpened" :class="{opened: menuOpened}"><span></span></span>
 
-      <ul :class="{opened: menuOpened}">
+      <ul class="headerMenu" :class="{opened: menuOpened}">
         <li><router-link :to="{name: 'home'}">{{ $t('header.home') }}</router-link></li>
         <li><router-link :to="{name: 'about'}">{{ $t('header.about') }}</router-link></li>
         <li>
@@ -39,6 +39,11 @@ export default {
     };
   },
   methods: {
+    /**
+     * Changes logo cells like it is a small game field.
+     * Also changes favicon according to logo state.
+     * @param {MouseEvent} event
+     */
     toggleLogoCell(event) {
       event.target.classList.toggle('cancelled');
 
@@ -47,8 +52,16 @@ export default {
         iconName += this.$refs[`cell${i}`].classList.contains('cancelled') ? 'x' : 'o';
       }
 
-      document.querySelector('link[rel=icon]').href = `${iconName}.png`;
+      /** @type HTMLLinkElement */
+      const iconElement = document.querySelector('link[rel=icon]');
+      if (iconElement) {
+        iconElement.href = `${iconName}.png`;
+      }
     },
+    /**
+     * Relocates to the current page for chosen language.
+     * @param {String} language
+     */
     changeLanguage: function (language) {
       let toRoute = {...this.$router.currentRoute};
 

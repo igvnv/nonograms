@@ -72,7 +72,7 @@ header {
       }
     }
 
-    > ul {
+    ul.headerMenu {
       background: $color-vue-gray;
       display: none;
       padding: 10px;
@@ -147,7 +147,7 @@ header {
         display: none;
       }
 
-      > ul {
+      ul.headerMenu {
         display: flex;
         margin: 0;
         padding: 0;
