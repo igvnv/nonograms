@@ -42,31 +42,31 @@ describe('GameField', () => {
     });
   });
 
-  describe('checkLine function', () => {
+  describe('checkFilledSubsequences function', () => {
     it('checks nothing when nothing is selected', () => {
       const wrapper = shallowMount(GameField, {localVue, propsData});
 
-      expect(wrapper.vm.checkLine([1, 2, 3], [])).toEqual([false, false, false]);
+      expect(wrapper.vm.checkFilledSubsequences([1, 2, 3], [])).toEqual([false, false, false]);
     });
 
     it('checks everything when everything is selected', () => {
       const wrapper = shallowMount(GameField, {localVue, propsData});
 
-      expect(wrapper.vm.checkLine([1, 2, 3], [1, 2, 3])).toEqual([true, true, true]);
+      expect(wrapper.vm.checkFilledSubsequences([1, 2, 3], [1, 2, 3])).toEqual([true, true, true]);
     });
 
     it('checks first math from list', () => {
       const wrapper = shallowMount(GameField, {localVue, propsData});
 
-      expect(wrapper.vm.checkLine([1, 1, 1], [1])).toEqual([true, false, false]);
+      expect(wrapper.vm.checkFilledSubsequences([1, 1, 1], [1])).toEqual([true, false, false]);
     });
 
     it('checks correctly any cases', () => {
       const wrapper = shallowMount(GameField, {localVue, propsData});
 
-      expect(wrapper.vm.checkLine([1, 2, 3, 1], [1, 2, 3])).toEqual([true, true, true, false]);
-      expect(wrapper.vm.checkLine([1, 2, 3, 4], [3, 4, 7])).toEqual([false, false, true, true]);
-      expect(wrapper.vm.checkLine([1, 2, 2, 2, 1], [1, 2, 1, 2, 1])).toEqual([true, true, true, false, true]);
+      expect(wrapper.vm.checkFilledSubsequences([1, 2, 3, 1], [1, 2, 3])).toEqual([true, true, true, false]);
+      expect(wrapper.vm.checkFilledSubsequences([1, 2, 3, 4], [3, 4, 7])).toEqual([false, false, true, true]);
+      expect(wrapper.vm.checkFilledSubsequences([1, 2, 2, 2, 1], [1, 2, 1, 2, 1])).toEqual([true, true, true, false, true]);
     });
   });
 });
