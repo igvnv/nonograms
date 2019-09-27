@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import * as ActionsTypes from './actions-types';
 import * as MutationTypes from './mitations-types';
 import variables from '../variables';
+import GameModel from '@/models/GameModel';
 
 Vue.use(Vuex);
 
@@ -10,8 +11,10 @@ export default new Vuex.Store({
   state: {
     currentLanguage: '',
 
+    /** @type GameModel */
     gameData: null,
     gameProcess: [],
+    /** @type GameModel[] */
     gamesList: [],
     gamesListLoadingStatus: '',
     gamesState: {}
@@ -145,28 +148,16 @@ export default new Vuex.Store({
 
       // TODO: Add asynchronous loading games from backend
       commit(MutationTypes.SET_GAMES_LIST, [
-        {
-          'id': 1,
-          'name': 'Easy',
-          'rows': [
-            [2],
-            [3],
-            [2],
-            [2],
-            [5]
-          ],
-          'columns': [
-            [1],
-            [1, 1],
-            [5],
-            [5],
-            [1]
-          ]
-        },
-        {
-          'id': 2,
-          'name': 'I love JS!',
-          'rows': [
+        new GameModel(
+          1,
+          'Easy',
+          [[2], [3], [2], [2], [5]],
+          [[1], [1, 1], [5], [5], [1]]
+        ),
+        new GameModel(
+          2,
+          'I love JS!',
+          [
             [20],
             [1, 1],
             [1, 1],
@@ -185,10 +176,9 @@ export default new Vuex.Store({
             [1, 2, 2, 2, 3, 1],
             [1, 6, 6, 1],
             [1, 4, 4, 1],
-            [1, 1],
-            [20]
+            [1, 1], [20]
           ],
-          'columns': [
+          [
             [20],
             [1, 1],
             [1, 1],
@@ -210,7 +200,7 @@ export default new Vuex.Store({
             [1, 1],
             [20]
           ]
-        }
+        )
       ]);
       commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'done');
     }
