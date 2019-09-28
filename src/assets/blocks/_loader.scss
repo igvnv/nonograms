@@ -1,0 +1,67 @@
+@import "../config";
+
+.loader {
+  font-size: 2em;
+  text-align: center;
+
+  .icon {
+    display: inline-block;
+    height: 50px;
+    margin-right: 20px;
+    position: relative;
+    transform: translateY(10px);
+    width: 50px;
+  }
+
+  .planet {
+    animation: loaderIconBlinking 5s infinite;
+    background: $color-vue-green;
+    border-radius: 50%;
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+    z-index: 10;
+  }
+
+  .satellite {
+    animation: loaderIconSatellite 2s infinite;
+    background: $color-vue-gray;
+    border-radius: 50%;
+    height: 10px;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    width: 10px;
+
+    &.second {
+      animation-delay: .4s;
+      transform: scale(1.5);
+    }
+  }
+}
+
+@keyframes loaderIconBlinking {
+  0%, 100% {
+    background: $color-vue-green;
+  }
+  50% {
+    background: darken($color-vue-green, 10%);
+  }
+}
+
+@keyframes loaderIconSatellite {
+  0%, 100% {
+    right: -10px;
+    top: -10px;
+  }
+  20% { z-index: 11}
+  50% {
+    right: 50px;
+    top: 50px;
+  }
+  70% {z-index: -1}
+  100% {
+    right: -10px;
+    top: -10px;
+  }
+}

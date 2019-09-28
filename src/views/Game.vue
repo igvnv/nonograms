@@ -15,7 +15,7 @@
 
     <div v-if="loadingError" class="errorMessage">{{ $t('game.loading_error') }}</div>
 
-    <div v-show="!gameData && !loadingError">{{ $t('game.game_is_loading') }}</div>
+    <Loader v-if="!gameData && !loadingError" />
 
     <div class="gameField">
       <GameField
@@ -51,12 +51,13 @@
 <script>
 import GameField from '@/components/GameField';
 import GameKeyboard from '@/components/GameKeyboard';
+import Loader from "@/components/Loader";
 import {mapState} from 'vuex';
 import variables from "../variables";
 import * as ActionsTypes from '../store/actions-types';
 
 export default {
-  components: {GameField, GameKeyboard},
+  components: {GameField, GameKeyboard, Loader},
   data: function () {
     return {
       loadingError: false,

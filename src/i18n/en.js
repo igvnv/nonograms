@@ -1,10 +1,12 @@
 export default Object.freeze({
+  loading: 'Loading...',
   header: {
     home: 'Home',
     about: 'About',
     language: 'Language',
   },
   gamesList: {
+    loading_error: 'Something went wrong and games list wasn\'t loaded... Try to refresh the page.',
     title: 'Choose your game!',
     gameState: {
       new_game: 'You have not played it yet',
@@ -17,7 +19,6 @@ export default Object.freeze({
     game_is_finished: 'Congratulations! Game is finished!',
     continue_game: 'Continue',
     go_to_games_list: 'Go to Games list',
-    game_is_loading: 'Game is loading...',
     restart: 'Restart',
     keyboard: 'Keyboard'
   },

@@ -2,7 +2,10 @@
   <div class="home container">
     <h2>{{ $t('gamesList.title')}}</h2>
 
-    <ul id="gamesList">
+    <Loader v-if="gamesListLoadingStatus === 'loading'" />
+    <div v-if="gamesListLoadingStatus === 'error'" class="errorMessage">{{ $t('gamesList.loading_error') }}</div>
+
+    <ul id="gamesList" v-show="gamesListLoadingStatus === 'done'">
       <li
         v-for="game in gamesList"
         :key="game.id"
@@ -32,10 +35,12 @@
 <script>
 import {mapState} from 'vuex';
 import variables from '../variables';
+import Loader from "@/components/Loader";
 import * as ActionsTypes from '../store/actions-types';
 
 export default {
   name: 'home',
+  components: {Loader},
 
   data: function () {
     return {

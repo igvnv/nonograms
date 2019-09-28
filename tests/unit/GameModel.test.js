@@ -88,4 +88,47 @@ describe('GameModel', () => {
       expect(GameModel.fromJSON(JSON.stringify(gameFields))).toEqual(game);
     });
   });
+
+  describe('fromFirestore', () => {
+    it('throws an error when input parameter is not an object', () => {
+      expect(() => {
+        GameModel.fromFirestore(123)
+      }).toThrow(new Error('Game document must be an object'));
+    });
+
+    it('throws an error when input parameter does not contain "id"', () => {
+      expect(() => {
+        GameModel.fromFirestore({data: function () {return {name: gameFields.name}}})
+      }).toThrow(new Error('Game document does not contain id'));
+    });
+
+    it('throws an error when input parameter does not contain "data" method', () => {
+      expect(() => {
+        GameModel.fromFirestore({id: gameFields.id})
+      }).toThrow(new Error('Game document does not contain data method'));
+    });
+
+    it('returns model with filled attributes (without field data)', () => {
+      const game = new GameModel(gameFields.id, gameFields.name);
+      expect(GameModel.fromFirestore({
+        id: gameFields.id,
+        data: function () {
+          return {name: gameFields.name}
+        }
+      })).toEqual(game);
+    });
+
+    it('returns model with filled attributes (with field data)', () => {
+      const game = new GameModel(gameFields.id, gameFields.name, gameFields.field.rows, gameFields.field.columns);
+      expect(GameModel.fromFirestore({
+        id: gameFields.id,
+        data: function () {
+          return {
+            name: gameFields.name,
+            field: JSON.stringify({rows: gameFields.field.rows, columns: gameFields.field.columns})
+          }
+        }
+      })).toEqual(game);
+    });
+  });
 });

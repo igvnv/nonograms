@@ -43,6 +43,37 @@ class GameModel {
       return new GameModel(data.id, data.name);
     }
   }
+
+  /**
+   * @param {object} document
+   * @return {GameModel}
+   */
+  static fromFirestore(document) {
+    if (typeof document != 'object') throw new Error('Game document must be an object');
+    if (!document.id) throw new Error('Game document does not contain id');
+    if (typeof document.data != 'function') throw new Error('Game document does not contain data method');
+
+    const data = document.data();
+
+    if (Object.keys(data).includes('field')) {
+      let field;
+      try {
+        field = JSON.parse(data.field);
+      }
+      catch (e) {
+        throw new Error('Invalid JSON');
+      }
+
+      if (typeof field !== 'object') throw new Error('Game field must be an object');
+      if (!Object.keys(field).includes('rows')) throw new Error('Game does not contain game field rows');
+      if (!Object.keys(field).includes('columns')) throw new Error('Game does not contain game field columns');
+
+      return new GameModel(parseInt(document.id), data.name, field.rows, field.columns);
+    }
+    else {
+      return new GameModel(parseInt(document.id), data.name);
+    }
+  }
 }
 
 export default GameModel;

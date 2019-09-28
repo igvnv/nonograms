@@ -1,10 +1,12 @@
 export default Object.freeze({
+  loading: 'Загрузка...',
   header: {
     home: 'Главная',
     about: 'О проекте',
     language: 'Язык',
   },
   gamesList: {
+    loading_error: 'Что-то пошло не так и не удалось загрузить список игр... Попробуй перезагрузить страницу.',
     title: 'Выбери игру!',
     gameState: {
       new_game: 'Ты пока не играл в эту игру',
@@ -17,7 +19,6 @@ export default Object.freeze({
     game_is_finished: 'Поздравляю! Игра завершена!',
     continue_game: 'Продолжить',
     go_to_games_list: 'Перейти к списку игр',
-    game_is_loading: 'Загружаем игру...',
     restart: 'Начать заново',
     keyboard: 'Клавиатура'
   },

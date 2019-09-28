@@ -4,6 +4,7 @@ import * as ActionsTypes from './actions-types';
 import * as MutationTypes from './mitations-types';
 import variables from '../variables';
 import GameModel from '@/models/GameModel';
+import db from '../firebase';
 
 Vue.use(Vuex);
 
@@ -146,63 +147,21 @@ export default new Vuex.Store({
       commit(MutationTypes.SET_GAMES_LIST, []);
       commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'loading');
 
-      // TODO: Add asynchronous loading games from backend
-      commit(MutationTypes.SET_GAMES_LIST, [
-        new GameModel(
-          1,
-          'Easy',
-          [[2], [3], [2], [2], [5]],
-          [[1], [1, 1], [5], [5], [1]]
-        ),
-        new GameModel(
-          2,
-          'I love JS!',
-          [
-            [20],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 2, 4, 1],
-            [1, 2, 6, 1],
-            [1, 2, 2, 2, 1],
-            [1, 2, 3, 1],
-            [1, 2, 4, 1],
-            [1, 2, 3, 1],
-            [1, 2, 3, 1],
-            [1, 2, 2, 2, 3, 1],
-            [1, 6, 6, 1],
-            [1, 4, 4, 1],
-            [1, 1], [20]
-          ],
-          [
-            [20],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 2, 1],
-            [1, 3, 1],
-            [1, 2, 1],
-            [1, 2, 1],
-            [1, 10, 1],
-            [1, 9, 1],
-            [1, 1],
-            [1, 3, 2, 1],
-            [1, 5, 3, 1],
-            [1, 2, 2, 2, 1],
-            [1, 2, 2, 2, 1],
-            [1, 3, 6, 1],
-            [1, 2, 4, 1],
-            [1, 2, 1],
-            [1, 1],
-            [20]
-          ]
-        )
-      ]);
-      commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'done');
+      try {
+        let gamesList = [];
+        const querySnapshot = await db.collection('games').get();
+        if (querySnapshot.empty) throw new Error('No games found');
+        querySnapshot.forEach(document => {
+          gamesList.push(GameModel.fromFirestore(document));
+        });
+
+        commit(MutationTypes.SET_GAMES_LIST, gamesList);
+        commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'done');
+      }
+      catch (e) {
+        commit(MutationTypes.SET_GAMES_LIST_LOADING_STATUS, 'error');
+        console.error(e);
+      }
     }
   }
 })
