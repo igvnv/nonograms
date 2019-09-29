@@ -7,7 +7,7 @@
         <span @click="toggleLogoCell" ref="cell3"></span>
         <span @click="toggleLogoCell" ref="cell4" class="cancelled"></span>
       </span>
-      Nonograms
+      <router-link :to="{name: 'home'}">Nonograms</router-link>
     </h1>
 
     <nav ref="navbar" v-show="this.$router.currentRoute.name !== 'choose_language'">
