@@ -1,6 +1,5 @@
-const firebase = require("firebase");
-// Required for side-effects
-require("firebase/database");
+const firebase = require("firebase/app");
+require("firebase/firestore");
 
 firebase.initializeApp({
   apiKey: 'AIzaSyC2fcIeThle-DQGJB6Pq5jjrjhMQm9CEl4',
