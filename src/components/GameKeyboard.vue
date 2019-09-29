@@ -51,14 +51,14 @@ export default {
    * Adds keyboard listeners on keyboard create.
    */
   mounted: function () {
-    document.addEventListener('keyup', this.keyListener);
+    document.addEventListener('keydown', this.keyListener);
   },
 
   /**
    * Adds keyboard listeners on keyboard remove.
    */
   destroyed: function () {
-    document.removeEventListener('keyup', this.keyListener);
+    document.removeEventListener('keydown', this.keyListener);
   },
 
   methods: {

@@ -109,7 +109,7 @@ describe('GameKeyboard', () => {
 
     it('emits "select" event with "CELL_FILLED" payload on ENTER key press', () => {
       const wrapper = shallowMount(GameKeyboard, {localVue});
-      let event = new KeyboardEvent('keyup', {code: 'Enter'});
+      let event = new KeyboardEvent('keydown', {code: 'Enter'});
       document.dispatchEvent(event);
 
       expect(wrapper.emitted('select').length).toBe(1);
@@ -118,7 +118,7 @@ describe('GameKeyboard', () => {
 
     it('emits "select" event with "CELL_FILLED" payload on SPACE key press', () => {
       const wrapper = shallowMount(GameKeyboard, {localVue});
-      let event = new KeyboardEvent('keyup', {code: 'Space'});
+      let event = new KeyboardEvent('keydown', {code: 'Space'});
       document.dispatchEvent(event);
 
       expect(wrapper.emitted('select').length).toBe(1);
@@ -127,7 +127,7 @@ describe('GameKeyboard', () => {
 
     it('emits "select" event with "CELL_FILLED" payload on key Z press', () => {
       const wrapper = shallowMount(GameKeyboard, {localVue});
-      let event = new KeyboardEvent('keyup', {code: 'KeyZ'});
+      let event = new KeyboardEvent('keydown', {code: 'KeyZ'});
       document.dispatchEvent(event);
 
       expect(wrapper.emitted('select').length).toBe(1);
@@ -136,7 +136,7 @@ describe('GameKeyboard', () => {
 
     it('emits "select" event with "CELL_CANCELLED" payload on key X press', () => {
       const wrapper = shallowMount(GameKeyboard, {localVue});
-      let event = new KeyboardEvent('keyup', {code: 'KeyX'});
+      let event = new KeyboardEvent('keydown', {code: 'KeyX'});
       document.dispatchEvent(event);
 
       expect(wrapper.emitted('select').length).toBe(1);
@@ -145,7 +145,7 @@ describe('GameKeyboard', () => {
 
     it('emits "select" event with "CELL_EMPTY" payload on key C press', () => {
       const wrapper = shallowMount(GameKeyboard, {localVue});
-      let event = new KeyboardEvent('keyup', {code: 'KeyC'});
+      let event = new KeyboardEvent('keydown', {code: 'KeyC'});
       document.dispatchEvent(event);
 
       expect(wrapper.emitted('select').length).toBe(1);

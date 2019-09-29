@@ -13,7 +13,7 @@
         <router-link :to="{name: 'game', params: {id: game.id, lang: self.$i18n.locale}}">
           <span class="number">#{{ game.id}}</span>
           <span class="info">
-            <span class="size">{{ game.columns.length }}x{{ game.rows.length }}</span>
+            <span class="size">{{ game.rows.length }}x{{ game.columns.length }}</span>
             <span class="state" :class="gameState(game.id).class">{{ $t('gamesList.gameState.' + gameState(game.id).label) }}</span>
           </span>
           <span class="name">

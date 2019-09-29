@@ -63,12 +63,13 @@ export default {
       loadingError: false,
       gameId: null,
       gameMode: variables.GAME_MODE_MOUSE,
+      gameProcess: null,
       showDonePopup: false,
       variables: variables
     };
   },
   computed: {
-    ...mapState(['gameData', 'gameProcess']),
+    ...mapState(['gameData']),
     gameState: function () {
       return this.$store.getters.gameState(this.gameId);
     }
@@ -89,7 +90,7 @@ export default {
     },
 
     selectActiveCell: function(state) {
-      this.$refs.gameField.setActiveCellState(state);
+      this.$refs.gameField.setCellState(state);
     },
 
     loadGame: async function (gameId) {
@@ -101,6 +102,8 @@ export default {
         await this.$store.dispatch(ActionsTypes.LOAD_GAME_PROCESS, gameId);
 
         this.$refs.gameField.adjustFieldToScreen();
+        // Avoiding use store's state to prevent update the field on each action.
+        this.gameProcess = this.$store.state.gameProcess;
       }
       catch (e) {
         console.error(e);
@@ -110,6 +113,7 @@ export default {
     restart: async function () {
       await this.$store.dispatch(ActionsTypes.SAVE_GAME_PROCESS, {id: this.gameId, cells: []});
       await this.$store.dispatch(ActionsTypes.LOAD_GAME_PROCESS, this.gameId);
+      this.$refs.gameField.clean();
     }
   },
   mounted() {
